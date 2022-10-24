@@ -1,13 +1,16 @@
 import cv2
 
-cap = cv2.VideoCapture("highway.mp4")
+# define video and object detection objects
+cap = cv2.VideoCapture("sample.mp4")
 object_detector = cv2.createBackgroundSubtractorMOG2(history=100, varThreshold=40)
 
 while True:
     # read video frames
     ret, frame = cap.read()
     height, width, _ = frame.shape
-    roi = frame[340:720, 500:800]
+
+    # define viewing space
+    roi = frame[340:640, 500:800]
 
     # detect object(s)
     mask = object_detector.apply(roi)
@@ -17,11 +20,11 @@ while True:
 
         # calculate area and remove small items
         area = cv2.contourArea(contour)
-        if area > 100:
+        if area > 1000:
             x, y, w, h = cv2.boundingRect(contour)
             cv2.rectangle(roi, (x, y), (x + w, y + h), (0, 255, 0), 3)
 
-    # display frame
+    # display frames
     cv2.imshow("roi", roi)
     cv2.imshow("Frame", frame)
     cv2.imshow("Mask", mask)
