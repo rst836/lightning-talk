@@ -15,6 +15,8 @@ while True:
 
     # detect object(s)
     mask = object_detector.apply(zone)
+
+    # create threshold that discards all pixels that aren't purely 255 white
     mask = cv2.threshold(mask, 254, 255, cv2.THRESH_BINARY)[1]
 
     # use mask to define contours of movement
