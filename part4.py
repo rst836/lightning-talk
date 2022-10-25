@@ -1,4 +1,4 @@
-# In this part, we use the mask to identify areas of movement
+# In this part, we learn how to box moving objects in a specific viewing space
 
 import cv2
 
@@ -10,17 +10,22 @@ while True:
     # read video frame
     frame = cap.read()[1]
 
-    # create mask
-    mask = object_detector.apply(frame)
+    # define viewing space
+    zone = frame[340:640, 500:800]
+
+    # detect object(s)
+    mask = object_detector.apply(zone)
+    mask = cv2.threshold(mask, 254, 255, cv2.THRESH_BINARY)[1]
 
     # use mask to define contours of movement
-    contours = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[0]
+    contours= cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[0]
 
-    # draw contours with sufficient area onto frame
+    # create a box around countours with sufficient area
     for contour in contours:
         area = cv2.contourArea(contour)
-        if area > 100:
-            cv2.drawContours(frame, [contour], -1, (0, 255, 0), 2)
+        if area > 1000:
+            x, y, w, h = cv2.boundingRect(contour)
+            cv2.rectangle(zone, (x, y), (x + w, y + h), (0, 255, 0), 3)
 
     # display frame and mask
     cv2.imshow("Frame", frame)

@@ -1,6 +1,8 @@
+# In this part, we import OpenCV and use it to play our sample.mp4 video
+
 import cv2
 
-# define video and object detection objects
+# define video object
 cap = cv2.VideoCapture("sample.mp4")
 
 while True:
